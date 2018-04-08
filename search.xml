@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title>创建自己的Laravel扩展包</title>
+      <link href="/2018/03/28/service-provider/"/>
+      <url>/2018/03/28/service-provider/</url>
+      <content type="html"><![CDATA[<h1 id="创建自己的Laravel扩展包"><a href="#创建自己的Laravel扩展包" class="headerlink" title="创建自己的Laravel扩展包"></a>创建自己的Laravel扩展包</h1>]]></content>
+      
+      
+        <tags>
+            
+            <tag> Laravel </tag>
+            
+            <tag> ServiceProvider </tag>
+            
+            <tag> composer </tag>
+            
+            <tag> 扩展包 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2018/03/26/hello-world/"/>
+      <url>/2018/03/26/hello-world/</url>
+      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+      
+      
+    </entry>
+    
+    <entry>
+      <title>解决supervisord进程导致的队列时差问题</title>
+      <link href="/2017/10/31/supervisord/"/>
+      <url>/2017/10/31/supervisord/</url>
+      <content type="html"><![CDATA[<p>最近在处理laravel队列的时候突然发现，每次在线上服务器用dispatch添加的队列所生成的数据的时间总是比北京时间少了8小时，最后花费了很多时间才得以解决。以下是我排查的过程：</p><ol><li>检查config/app.php的时区配置；</li><li>给create方法添加<code>created_at</code>和<code>updated_at</code>字段；</li><li>检查服务器的系统时区以及服务器的mysql时区配置；</li><li>检查生成队列的过程中是否存在修改影响时区的代码</li><li>排查supervisord守护进程。</li></ol><p>经过一系列的排查，以及对比本地与服务器的运行结果，发现不是代码上的问题，也不是服务器上的时区问题，而是之前一个老旧的supervisord进程缓存的配置问题。<br>通过<code>ps -ef | grep supervisor</code>找到关于supervisord的一些进程：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root      9616  9559  0 15:02 pts/3    00:00:00 grep --color=auto supervisor</span><br><span class="line">root     22905     1  0 11:13 ?        00:00:03 /usr/bin/python /usr/bin/supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure><p>使用命令<code>kill -s SIGTERM 22905</code>终止pid为22905的进程，然后输入命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure><p>重新将supervisord指定配置文件，更新新的配置到supervisord</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl update</span><br></pre></td></tr></table></figure><p>重新启动配置中的所有程序</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl reload</span><br></pre></td></tr></table></figure><p>最后重启所有进程<code>supervisorctl restart all</code>即可</p>]]></content>
+      
+      
+        <tags>
+            
+            <tag> Laravel </tag>
+            
+            <tag> 任务队列 </tag>
+            
+            <tag> 8小时 </tag>
+            
+            <tag> supervisor </tag>
+            
+            <tag> created_at </tag>
+            
+        </tags>
+      
+    </entry>
+    
+  
+  
+</search>
