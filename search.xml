@@ -8,6 +8,12 @@
       <url>/2018/04/02/%E6%B3%A8%E5%86%8C%E6%A0%91%E6%A8%A1%E5%BC%8F/</url>
       <content type="html"><![CDATA[<p>工厂模式为了减少不断的new操作，单例模式为了维持全局唯一的实例，注册树模式跟这两种模式类似的地方在于减少并维持某个实例、变量的唯一性，而不同的地方在于注册树模式将这些实例、变量等放到全局（或相对全局）来进行统一管理调度，而不像工厂与单例模式那么闲散。</p><p>注册树模式，顾名思义，该模式实现将某个东西注册（挂）到某棵树的方法。随即引出实现该模式的几个要点：<br>1.有棵树；<br>2.注册（挂）到树的方法；<br>3.读取的方法（实现<code>用</code>的功能，不能干挂着不做事）；<br>4.注销的方法（有注册就要有注销的功能）</p><p>实现如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Register</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 一棵大树</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> $tree = [];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 挂到树上</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">set</span><span class="params">($key, $value)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">self</span>::$tree[$key] = $value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 读取树上的节点</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">($key)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">isset</span>(<span class="keyword">self</span>::$tree[$key]) ? <span class="keyword">self</span>::$tree[$key] : <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 取下树的节点</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">_unset</span><span class="params">($key)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">unset</span>(<span class="keyword">self</span>::$tree[$key]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>使用方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 将某个东西挂到树上</span><br><span class="line">Register::set(&apos;db&apos;, &apos;db_value&apos;)</span><br><span class="line"></span><br><span class="line">// 读取</span><br><span class="line">Register::get(&apos;db&apos;);</span><br><span class="line"></span><br><span class="line">// 注销</span><br><span class="line">Register::_unset(&apos;db&apos;);</span><br></pre></td></tr></table></figure></p><p>通常，在项目初始化或载入某些模块的时候进行树的注册。</p>]]></content>
       
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
       
         <tags>
             
@@ -26,6 +32,12 @@
       <link href="/2018/03/28/service-provider/"/>
       <url>/2018/03/28/service-provider/</url>
       <content type="html"><![CDATA[<h1 id="创建自己的Laravel扩展包"><a href="#创建自己的Laravel扩展包" class="headerlink" title="创建自己的Laravel扩展包"></a>创建自己的Laravel扩展包</h1>]]></content>
+      
+      <categories>
+          
+          <category> Laravel </category>
+          
+      </categories>
       
       
         <tags>
@@ -46,7 +58,13 @@
       <title>支付宝支付配置踩过的坑</title>
       <link href="/2018/03/27/%E6%94%AF%E4%BB%98%E5%AE%9D%E6%94%AF%E4%BB%98%E9%85%8D%E7%BD%AE%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/"/>
       <url>/2018/03/27/%E6%94%AF%E4%BB%98%E5%AE%9D%E6%94%AF%E4%BB%98%E9%85%8D%E7%BD%AE%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</url>
-      <content type="html"><![CDATA[<p>在调用支付宝支付时出现以下错误：<br><img src="https://img-blog.csdn.net/20180327171307726?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTMwNDk1NTM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p><p>在参考了官方给出的排错文档之后（<a href="https://openclub.alipay.com/read.php?tid=2326&amp;fid=46" target="_blank" rel="noopener">RSA2私钥填写错误报错集合</a>），依旧没有找出问题所在。</p><p>最后通过一步步断点调试发现，原来在项目配置商户私钥的时候是直接读取的<code>.pem</code>私钥文件的，该商户私钥文件中已经包含了“BEGIN”头和“END”尾，而官方提供的SDK中的AopClient.php文件的sign方法里面有这么一段代码：<br><img src="https://img-blog.csdn.net/2018032718522855?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTMwNDk1NTM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="AopClient.php文件的sign函数"><br>即该参数只需商户私钥的正文部分，头尾部分程序已经自动帮我们加上了。</p><p>于是，我将<code>.pem</code>文件的头尾去掉后保存重新读取，发现还是报同样的错误。经过一番调试，原来是我的<em>编辑器在保存的时候自动在文件末尾增加一行空白行</em>，经过sign函数后，该商户私钥补上了头和尾，然而“END”尾前多了一行空白行，导致最后的签名参数值为空字符串。去除该空白行后，一切运行顺利。</p><p>建议<strong>配置支付宝支付配置的时候采用文本方式读取，尽量不要以读文件的方式。</strong></p>]]></content>
+      <content type="html"><![CDATA[<p>在调用支付宝支付时出现以下错误：</p><p><img src="https://img-blog.csdn.net/20180327171307726?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTMwNDk1NTM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="这里写图片描述"></p><p>在参考了官方给出的排错文档之后（<a href="https://openclub.alipay.com/read.php?tid=2326&amp;fid=46" target="_blank" rel="noopener">RSA2私钥填写错误报错集合</a>），依旧没有找出问题所在。</p><p>最后通过一步步断点调试发现，原来在项目配置商户私钥的时候是直接读取的<code>.pem</code>私钥文件的，该商户私钥文件中已经包含了“BEGIN”头和“END”尾，而官方提供的SDK中的AopClient.php文件的sign方法里面有这么一段代码：<br><img src="https://img-blog.csdn.net/2018032718522855?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTMwNDk1NTM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="AopClient.php文件的sign函数"><br>即该参数只需商户私钥的正文部分，头尾部分程序已经自动帮我们加上了。</p><p>于是，我将<code>.pem</code>文件的头尾去掉后保存重新读取，发现还是报同样的错误。经过一番调试，原来是我的<em>编辑器在保存的时候自动在文件末尾增加一行空白行</em>，经过sign函数后，该商户私钥补上了头和尾，然而“END”尾前多了一行空白行，导致最后的签名参数值为空字符串。去除该空白行后，一切运行顺利。</p><p>建议<strong>配置支付宝支付配置的时候采用文本方式读取，尽量不要以读文件的方式。</strong></p>]]></content>
+      
+      <categories>
+          
+          <category> 支付 </category>
+          
+      </categories>
       
       
         <tags>
@@ -66,19 +84,16 @@
     </entry>
     
     <entry>
-      <title>Hello World</title>
-      <link href="/2018/03/26/hello-world/"/>
-      <url>/2018/03/26/hello-world/</url>
-      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
-      
-      
-    </entry>
-    
-    <entry>
       <title>解决supervisord进程导致的队列时差问题</title>
       <link href="/2017/10/31/supervisord/"/>
       <url>/2017/10/31/supervisord/</url>
       <content type="html"><![CDATA[<p>最近在处理laravel队列的时候突然发现，每次在线上服务器用dispatch添加的队列所生成的数据的时间总是比北京时间少了8小时，最后花费了很多时间才得以解决。以下是我排查的过程：</p><ol><li>检查config/app.php的时区配置；</li><li>给create方法添加<code>created_at</code>和<code>updated_at</code>字段；</li><li>检查服务器的系统时区以及服务器的mysql时区配置；</li><li>检查生成队列的过程中是否存在修改影响时区的代码</li><li>排查supervisord守护进程。</li></ol><p>经过一系列的排查，以及对比本地与服务器的运行结果，发现不是代码上的问题，也不是服务器上的时区问题，而是之前一个老旧的supervisord进程缓存的配置问题。<br>通过<code>ps -ef | grep supervisor</code>找到关于supervisord的一些进程：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root      9616  9559  0 15:02 pts/3    00:00:00 grep --color=auto supervisor</span><br><span class="line">root     22905     1  0 11:13 ?        00:00:03 /usr/bin/python /usr/bin/supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure><p>使用命令<code>kill -s SIGTERM 22905</code>终止pid为22905的进程，然后输入命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisord -c /etc/supervisord.conf</span><br></pre></td></tr></table></figure><p>重新将supervisord指定配置文件，更新新的配置到supervisord</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl update</span><br></pre></td></tr></table></figure><p>重新启动配置中的所有程序</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisorctl reload</span><br></pre></td></tr></table></figure><p>最后重启所有进程<code>supervisorctl restart all</code>即可</p>]]></content>
+      
+      <categories>
+          
+          <category> Other </category>
+          
+      </categories>
       
       
         <tags>
