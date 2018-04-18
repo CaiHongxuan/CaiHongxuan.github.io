@@ -3,6 +3,25 @@
   
     
     <entry>
+      <title>注册树模式</title>
+      <link href="/2018/04/02/%E6%B3%A8%E5%86%8C%E6%A0%91%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2018/04/02/%E6%B3%A8%E5%86%8C%E6%A0%91%E6%A8%A1%E5%BC%8F/</url>
+      <content type="html"><![CDATA[<p>工厂模式为了减少不断的new操作，单例模式为了维持全局唯一的实例，注册树模式跟这两种模式类似的地方在于减少并维持某个实例、变量的唯一性，而不同的地方在于注册树模式将这些实例、变量等放到全局（或相对全局）来进行统一管理调度，而不像工厂与单例模式那么闲散。</p><p>注册树模式，顾名思义，该模式实现将某个东西注册（挂）到某棵树的方法。随即引出实现该模式的几个要点：<br>1.有棵树；<br>2.注册（挂）到树的方法；<br>3.读取的方法（实现<code>用</code>的功能，不能干挂着不做事）；<br>4.注销的方法（有注册就要有注销的功能）</p><p>实现如下：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Register</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 一棵大树</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">static</span> $tree = [];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 挂到树上</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">set</span><span class="params">($key, $value)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">self</span>::$tree[$key] = $value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 读取树上的节点</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">get</span><span class="params">($key)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">isset</span>(<span class="keyword">self</span>::$tree[$key]) ? <span class="keyword">self</span>::$tree[$key] : <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 取下树的节点</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">_unset</span><span class="params">($key)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">unset</span>(<span class="keyword">self</span>::$tree[$key]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>使用方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 将某个东西挂到树上</span><br><span class="line">Register::set(&apos;db&apos;, &apos;db_value&apos;)</span><br><span class="line"></span><br><span class="line">// 读取</span><br><span class="line">Register::get(&apos;db&apos;);</span><br><span class="line"></span><br><span class="line">// 注销</span><br><span class="line">Register::_unset(&apos;db&apos;);</span><br></pre></td></tr></table></figure></p><p>通常，在项目初始化或载入某些模块的时候进行树的注册。</p>]]></content>
+      
+      
+        <tags>
+            
+            <tag> 注册树模式 </tag>
+            
+            <tag> 全局注册 </tag>
+            
+            <tag> 唯一 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>创建自己的Laravel扩展包</title>
       <link href="/2018/03/28/service-provider/"/>
       <url>/2018/03/28/service-provider/</url>
