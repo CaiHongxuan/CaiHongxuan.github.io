@@ -3,6 +3,40 @@
   
     
     <entry>
+      <title>单例模式</title>
+      <link href="/2018/04/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
+      <url>/2018/04/18/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>
+      <content type="html"><![CDATA[<p>单例模式（Singleton Pattern）顾名思义，通过这种模式可以保证系统中一个类只有一个实例。</p><p>作为一种常用的软件设计模式，单例模式经常被用在数据库操作、缓存、线程池等方面。因为对这些操作来说，只有一个实例很重要，可以避免很多的new操作和连接关闭等操作，减少对系统和内存资源的消耗。</p><h2 id="单例模式主要有三个要点："><a href="#单例模式主要有三个要点：" class="headerlink" title="单例模式主要有三个要点："></a>单例模式主要有三个要点：</h2><ol><li>该类只能有一个实例;</li><li>它必须自行创建这个实例;</li><li>它必须向整个系统提供这个实例。</li></ol><h2 id="实现单例模式类的要点主要有三点："><a href="#实现单例模式类的要点主要有三点：" class="headerlink" title="实现单例模式类的要点主要有三点："></a>实现单例模式类的要点主要有三点：</h2><ol><li>该类只提供私有的构造函数;</li><li>类定义中含有一个该类的静态私有对象;</li><li>该类提供一个静态的公有的函数用于创建或获取它本身的静态私有对象。</li></ol><p>实现代码如下：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: hongxuan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>:   2016-05-11 00:45:24</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Last</span> Modified by:   hongxuan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Last</span> Modified time: 2016-05-11 01:21:00</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 单例模式</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span>&#123;</span><br><span class="line"><span class="comment">//私有静态成员变量，保存类实例</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> $_instance = <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 私有的构造函数，只能被其自身实例化，防止外界实例化对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"this is construct function"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 私有的__clone()方法，确保单例类不能被复制或克隆</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> [type] [description]</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">__clone</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 静态公有方法，创建或获取它本身的静态私有对象，是单例模式的统一访问入口</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> Singleton 返回唯一对象实例</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">if</span>(!(<span class="keyword">self</span>::$_instance <span class="keyword">instanceof</span> <span class="keyword">self</span>))&#123;</span><br><span class="line"><span class="keyword">self</span>::$_instance = <span class="keyword">new</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="keyword">self</span>::$_instance;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 类中的其它方法</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> [type] [description]</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"this is getName function"</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取实例</span></span><br><span class="line">$test = Singleton::getInstance();</span><br><span class="line">$test-&gt;getName();</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure><h2 id="使用这一模式的缺点："><a href="#使用这一模式的缺点：" class="headerlink" title="使用这一模式的缺点："></a>使用这一模式的缺点：</h2><ol><li>每次对象请求引用都要检查类的实例是否存在，这需要一些少量的开销;</li><li>彼此间的依赖关系比较隐蔽，难以调试;</li><li>因为不能用传统的new方法来创建实例，这可能会发生开发混淆。</li></ol>]]></content>
+      
+      <categories>
+          
+          <category> 设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 设计模式 </tag>
+            
+            <tag> 单例模式 </tag>
+            
+            <tag> singleton </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>draft</title>
+      <link href="/2018/04/18/draft/"/>
+      <url>/2018/04/18/draft/</url>
+      <content type="html"><![CDATA[]]></content>
+      
+      
+    </entry>
+    
+    <entry>
       <title>注册树模式</title>
       <link href="/2018/04/02/%E6%B3%A8%E5%86%8C%E6%A0%91%E6%A8%A1%E5%BC%8F/"/>
       <url>/2018/04/02/%E6%B3%A8%E5%86%8C%E6%A0%91%E6%A8%A1%E5%BC%8F/</url>
@@ -84,6 +118,64 @@
     </entry>
     
     <entry>
+      <title>本地配置的*.dev虚拟域名在Chrome浏览器自动跳转到HTTPS</title>
+      <link href="/2018/03/16/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AE%E7%9A%84.dev%E8%99%9A%E6%8B%9F%E5%9F%9F%E5%90%8D%E5%9C%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E5%88%B0HTTPS/"/>
+      <url>/2018/03/16/%E6%9C%AC%E5%9C%B0%E9%85%8D%E7%BD%AE%E7%9A%84.dev%E8%99%9A%E6%8B%9F%E5%9F%9F%E5%90%8D%E5%9C%A8Chrome%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E5%88%B0HTTPS/</url>
+      <content type="html"><![CDATA[<p>环境条件：</p><ol><li>Windows10</li><li>65版本的Chrome浏览器</li><li>本地配置的.dev后缀虚拟域名</li></ol><p>以上条件下出现以下问题：<br><img src="//img-blog.csdn.net/20180316140459330?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L3UwMTMwNDk1NTM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt=".dev域名不能访问"></p><p>在其他浏览器下一切正常。</p><p>经查找相关资料，解决方案只有一个：<strong>换顶级域名<code>.dev</code></strong></p><p>因为Google公司获得了<code>.dev</code>的顶级域名，并从63版的Chrome浏览器开始，强制将<code>.dev</code>、<code>.app</code>顶级域名跳转到HTTPS。</p><p>建议将以上域名换为：<code>.test</code>、<code>.localhost</code>、<code>.example</code>或<code>.invalid</code><br><img src="//img-blog.csdn.net/20180316144718977?watermark/2/text/Ly9ibG9nLmNzZG4ubmV0L3UwMTMwNDk1NTM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt=".test域名可以访问"></p><p>参考文章：</p><ol><li><a href="https://laravel-news.com/chrome-63-now-forces-dev-domains-https" target="_blank" rel="noopener">Chrome 63 now forces .dev domains to HTTPS</a></li><li><a href="https://iyware.com/dont-use-dev-for-development/" target="_blank" rel="noopener">Don’t Use .dev For Development</a></li></ol>]]></content>
+      
+      <categories>
+          
+          <category> Other </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> chrome </tag>
+            
+            <tag> https </tag>
+            
+            <tag> .dev </tag>
+            
+            <tag> 强制跳转 </tag>
+            
+            <tag> 本地调试 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Python 数据类型基础</title>
+      <link href="/2018/02/09/Python-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%9F%BA%E7%A1%80/"/>
+      <url>/2018/02/09/Python-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%9F%BA%E7%A1%80/</url>
+      <content type="html"><![CDATA[<p>[toc]</p><h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><ul><li><strong>4</strong>个空格缩进；</li><li>大小写敏感；</li></ul><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><h3 id="1-整数"><a href="#1-整数" class="headerlink" title="1. 整数"></a>1. 整数</h3><p>Python可以处理任意大小的整数，包括负整数。</p><h3 id="2-浮点数"><a href="#2-浮点数" class="headerlink" title="2. 浮点数"></a>2. 浮点数</h3><p>整数和浮点数在计算机内部存储的方式是不同的，整数运算永远是精确的（==除法也是精确的==），而浮点数运算则可能会有四舍五入的误差。</p><p>在Python中有两种除法，一种除法是<code>/</code>，<code>/</code>除法计算结果是浮点数，即使是两个整数恰好整除，结果也是浮点数；另一种除法是<code>//</code>，称为地板除，两个整数的除法仍然是整数。</p><h3 id="3-字符串"><a href="#3-字符串" class="headerlink" title="3. 字符串"></a>3. 字符串</h3><p>字符串是以单引号<code>&#39;</code>或双引号<code>&quot;</code>括起来的任意文本。</p><p>Python允许用r’’表示’’内部的字符串默认不转义。</p><p>如果字符串内部有很多换行，用\n写在一行里不好阅读，为了简化，Python允许用’’’…’’’的格式表示多行内容</p><h3 id="4-布尔值"><a href="#4-布尔值" class="headerlink" title="4. 布尔值"></a>4. 布尔值</h3><p><code>True</code>、<code>False</code>（注意大小写）</p><h3 id="5-空值"><a href="#5-空值" class="headerlink" title="5. 空值"></a>5. 空值</h3><p>空值是Python里一个特殊的值，用<code>None</code>表示。<code>None</code>不能理解为<code>0</code>，因为<code>0</code>是有意义的，而<code>None</code>是一个特殊的空值。Python还提供了列表、字典等多种数据类型，还允许创建自定义数据类型。</p><h3 id="6-变量"><a href="#6-变量" class="headerlink" title="6. 变量"></a>6. 变量</h3><p>可以把任意数据类型赋值给变量，同一个变量可以反复赋值，而且可以是不同类型的变量。</p><h3 id="7-常量"><a href="#7-常量" class="headerlink" title="7. 常量"></a>7. 常量</h3><p>在Python中，通常用全部大写的变量名表示常量。用全部大写的变量名表示常量只是一个习惯上的用法。</p><h3 id="8-列表list"><a href="#8-列表list" class="headerlink" title="8. 列表list"></a>8. 列表<code>list</code></h3><p>list是一种有序的集合，可以随时添加和删除其中的元素。list里面的元素的数据类型可以不同。</p><p><code>[&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;]</code></p><p>可通过下标索引访问list元素，如：mates[0];</p><p>也可通过负数做索引访问倒数第n个元素，如：mates[-2];</p><p><code>len()</code>函数可以获得list元素的个数；</p><p><code>append()</code>函数追加元素到list末尾，如：<code>mates.append(&#39;Xiao Hong&#39;)</code>；</p><p><code>insert()</code>函数将元素插入到指定位置，如：<code>mates.insert(1, &#39;Li Ming&#39;)</code>；</p><p><code>pop()</code>函数删除list末尾的元素，如：<code>mates.pop()</code>，<br>要删除指定位置的元素，用<code>pop(i)</code>方法，<code>i</code>是索引位置；</p><p>要替换元素，可直接赋值给对应的索引位置；</p><h3 id="9-tuple（元组）"><a href="#9-tuple（元组）" class="headerlink" title="9. tuple（元组）"></a>9. tuple（元组）</h3><p>元组，是一种有序列表。它和list非常类似，但是tuple一旦初始化就不能修改。</p><p><code>(&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;)</code></p><p>要定义一个元素的tuple，不能使用：<code>(1)</code>，因为括号既可以表示tuple，又可以表示数学公式中的小括号，这就产生了歧义，因此，Python规定，这种情况下，按小括号进行计算，所以，只有1个元素的tuple定义时必须加一个逗号<code>,</code>，来消除歧义：<code>(1,)</code>，（Python在显示只有1个元素的tuple时，也会加一个逗号<code>,</code>，以免用户误解成数学计算意义上的括号）。</p><p>“可变的”tuple：当tuple里的元素包含list时，可修改tuple里的list元素，这样看起来像是“可变的”。</p><p>tuple所谓的“不变”是说，tuple的每个元素，指向永远不变。当指向一个list，就不能改变指成其他对象，但指向的这个list本身是可变的。</p><h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">if &lt;条件判断1&gt;:</span><br><span class="line">    &lt;执行1&gt;</span><br><span class="line">elif &lt;条件判断2&gt;:</span><br><span class="line">    &lt;执行2&gt;</span><br><span class="line">elif &lt;条件判断3&gt;:</span><br><span class="line">    &lt;执行3&gt;</span><br><span class="line">else:</span><br><span class="line">    &lt;执行4&gt;</span><br></pre></td></tr></table></figure><p>只要‘条件判断’中的结果不为：非零数值、非空字符串、非空list等，就判断为<code>True</code>，否则为<code>False</code>。</p><h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><p>Python有两种循环方式：</p><p>1.for…in，如：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sum = 0</span><br><span class="line">for x in range(101):</span><br><span class="line">    sum += x</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure><p>2.while，如：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sum = 0</span><br><span class="line">n = 99</span><br><span class="line">while n &gt; 0:</span><br><span class="line">    sum += n</span><br><span class="line">    n = n - 2</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure><h2 id="dict"><a href="#dict" class="headerlink" title="dict"></a>dict</h2><p>Python内置了字典：dict的支持，dict全称dictionary，在其他语言中也称为map，使用键-值（key-value）存储，具有极快的查找速度。</p><p><code>{&#39;Michael&#39;:95, &#39;Bob&#39;:75, &#39;Tracy&#39;:85}</code></p><p>把数据放入dict的方法，除了初始化时指定外，还可以通过key放入：<code>d[&#39;Adam&#39;] = 67</code></p><p>可通过<code>in</code>判断key是否存在：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;&apos;Thomas&apos; in d</span><br><span class="line">False</span><br></pre></td></tr></table></figure></p><p>可也通过dict提供的get方法，如果key不存在，可以返回None，或者自己指定的value：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;d.get(&apos;Thomas&apos;)</span><br><span class="line">&gt;&gt;&gt;d.get(&apos;Thomas&apos;, -1)</span><br><span class="line">-1</span><br></pre></td></tr></table></figure></p><p>注意：返回<code>None</code>的时候Python的交互式命令行不显示结果。</p><p><code>pop(key)</code>方法可以删除一个key，如：<code>d.pop(&#39;Bob&#39;)</code></p><p><strong>dict内部存放的顺序和key放入的顺序是没有关系的。</strong></p><p><strong>dict的key必须是不可变对象</strong></p><h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p>set和dict类似，也是一组key的组合，但不存储value。由于key不能重复，所以，在set中，没有重复的key。</p><p>要创建一个set，需要提供一个list作为输入集合：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;s = set([1,2,3])</span><br><span class="line">&gt;&gt;&gt;s</span><br><span class="line">&#123;1,2,3&#125;</span><br></pre></td></tr></table></figure></p><p>注意，传入的参数<code>[1,3,3]</code>是一个list，而显示的<code>{1,2,3}</code>只是告诉你这个set内部有1,2,3这3个元素，显示的顺序也不表示set是有序的。</p><p>重复元素在set中自动被过滤。</p><p>通过<code>add(key)</code>方法可以添加元素到set中，可以重复添加，但不会有效果。</p><p>通过<code>remove(key)</code>方法可以删除元素。</p><p>set可以看成数学意义上的无序和无重复元素的集合，因此，两个set可以做数学意义上的交集、并集等操作：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;s1 = set([1,2,3])</span><br><span class="line">&gt;&gt;&gt;s2 = set([2,3,4])</span><br><span class="line">&gt;&gt;&gt;s1 &amp; s2</span><br><span class="line">&#123;2,3&#125;</span><br><span class="line">&gt;&gt;&gt;s1 | s2</span><br><span class="line">&#123;1,2,3,4&#125;</span><br></pre></td></tr></table></figure></p><p>set和dict的唯一区别在于没有存储对应的value，但是，set的原理和dict一样，所以，同样不可以放入可变对象，因为无法判断两个可变对象是否相等，也就无法保证set内部“不会有重复元素”。</p><p><strong>对于不变对象来说，调用对象自身的任意方法，也不会改变该对象自身的内容。相反，这些方法会创建新的对象并返回，这样，就保证了不可变对象本身永远是不可变的。</strong></p>]]></content>
+      
+      <categories>
+          
+          <category> Python </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Python </tag>
+            
+            <tag> 数据类型 </tag>
+            
+            <tag> dict </tag>
+            
+            <tag> set </tag>
+            
+            <tag> tuple </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>解决supervisord进程导致的队列时差问题</title>
       <link href="/2017/10/31/supervisord/"/>
       <url>/2017/10/31/supervisord/</url>
@@ -107,6 +199,81 @@
             <tag> supervisor </tag>
             
             <tag> created_at </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>Centos下编译安装fileinfo扩展</title>
+      <link href="/2017/09/13/Centos%E4%B8%8B%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85fileinfo%E6%89%A9%E5%B1%95/"/>
+      <url>/2017/09/13/Centos%E4%B8%8B%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85fileinfo%E6%89%A9%E5%B1%95/</url>
+      <content type="html"><![CDATA[<p>这两天发现在服务器上(linux系统)没有安装fileinfo扩展，导致上传文件等操作失败。</p><p>于是，尝试使用如下命令安装该扩展：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pecl install fileinfo</span><br></pre></td></tr></table></figure></p><p>结果失败。说什么.m4文件不存在等问题。</p><p>最后。上网查了下相关资料，通过如下方式才得以成功：</p><h3 id="1、检查当前环境："><a href="#1、检查当前环境：" class="headerlink" title="1、检查当前环境："></a>1、检查当前环境：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -i|grep fileinfo</span><br></pre></td></tr></table></figure><p>看是否已安装fileinfo扩展，若没有，则进行下一步。</p><h3 id="2、安装fileinfo扩展"><a href="#2、安装fileinfo扩展" class="headerlink" title="2、安装fileinfo扩展"></a>2、安装fileinfo扩展</h3><h4 id="2-1、下载扩展包"><a href="#2-1、下载扩展包" class="headerlink" title="2.1、下载扩展包"></a>2.1、下载扩展包</h4><p><strong>根据各自的版本号进行下载</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget -O php-5.6.25.tar.gz http://cn2.php.net/get/php-5.6.25.tar.gz/from/this/mirror</span><br></pre></td></tr></table></figure></p><h4 id="2-2、解压"><a href="#2-2、解压" class="headerlink" title="2.2、解压"></a>2.2、解压</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf php-5.6.25.tar.gz</span><br></pre></td></tr></table></figure><h4 id="2-3、进入该扩展目录"><a href="#2-3、进入该扩展目录" class="headerlink" title="2.3、进入该扩展目录"></a>2.3、进入该扩展目录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /alidata/server/php/php-5.6.25/ext/fileinfo</span><br></pre></td></tr></table></figure><p>该扩展暂时解压在<code>/alidata/server/php</code>目录下</p><h4 id="2-4、编译-amp-amp-安装"><a href="#2-4、编译-amp-amp-安装" class="headerlink" title="2.4、编译 &amp;&amp; 安装"></a>2.4、编译 &amp;&amp; 安装</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/alidata/server/php/bin/phpize</span><br><span class="line">./configure -with-php-config=/alidata/server/php/bin/php-config</span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure><p>这样，就会在系统默认的扩展目录下新生成一个<code>fileinfo.so</code>文件</p><h4 id="2-5、修改php-ini文件"><a href="#2-5、修改php-ini文件" class="headerlink" title="2.5、修改php.ini文件"></a>2.5、修改php.ini文件</h4><p>加入：<code>extension=fileinfo.so</code></p><p>完成。</p><p>参考文章：<a href="https://segmentfault.com/a/1190000005058875" target="_blank" rel="noopener">Centos 下PHP编译安装fileinfo扩展</a></p>]]></content>
+      
+      <categories>
+          
+          <category> Other </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> centos </tag>
+            
+            <tag> php </tag>
+            
+            <tag> fileinfo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>面向对象编程的基本原则</title>
+      <link href="/2017/05/21/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99/"/>
+      <url>/2017/05/21/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%88%99/</url>
+      <content type="html"><![CDATA[<h1 id="面向对象编程的基本原则"><a href="#面向对象编程的基本原则" class="headerlink" title="面向对象编程的基本原则"></a>面向对象编程的基本原则</h1><ol><li><p><strong>单一职责</strong><br>一个类，只需做好一件事情。</p></li><li><p><strong>开发封闭</strong><br>一个类，应该是可扩展的，而不可修改的。</p></li><li><p><strong>依赖倒置</strong><br>一个类，不应该强依赖另一个类。每个类对于另一个类应该是可替换的。</p></li><li><p><strong>配置化</strong><br>尽可能的使用配置，而不是硬编码。</p></li><li><p><strong>面向接口编程</strong><br>只需要关心接口，不需要关心实现。</p></li></ol>]]></content>
+      
+      <categories>
+          
+          <category> Other </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 面向对象编程 </tag>
+            
+            <tag> 基本原则 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
+      <title>ThinkPHP 多表事物</title>
+      <link href="/2017/01/23/Thinkphp-%E5%A4%9A%E8%A1%A8%E4%BA%8B%E7%89%A9/"/>
+      <url>/2017/01/23/Thinkphp-%E5%A4%9A%E8%A1%A8%E4%BA%8B%E7%89%A9/</url>
+      <content type="html"><![CDATA[<p>在 Thinkphp 3.2.3 下测试通过。</p><p>Thinkphp 对事务的处理非常简单。单表事务只需使用 M 函数实例化一个数据表对象，如果操作成功则提交，失败则回滚。例如：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$User = M(<span class="string">'user'</span>);</span><br><span class="line"> </span><br><span class="line">$User-&gt;startTrans(); <span class="comment">// 开启事务</span></span><br><span class="line">$id = $User-&gt;add([<span class="string">'name'</span> =&gt; <span class="string">'hongxuan'</span>]);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// TODO 其它操作</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> ($id) &#123; <span class="comment">// 插入成功</span></span><br><span class="line">    $User-&gt;commit(); <span class="comment">// 提交</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123; <span class="comment">// 添加失败</span></span><br><span class="line">    $User-&gt;rollback(); <span class="comment">// 回滚</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>对多表的事务处理也非常简便。先用 M 函数实例化一个空对象，使用 table 方法进行多个表的操作，如果操作成功则提交，失败则回滚。例如：</p><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$Model = M(); <span class="comment">// 实例化一个空对象</span></span><br><span class="line">$Model-&gt;startTrans(); <span class="comment">// 开启事务</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// TODO 其它操作</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">// table 方法中的数据表名要带上前缀，这里为“test_”。</span></span><br><span class="line">$Model-&gt;table(<span class="string">'test_user'</span>)-&gt;add([<span class="string">'name'</span>=&gt;<span class="string">'admin'</span>]);</span><br><span class="line">$Model-&gt;table(<span class="string">'test_key'</span>)-&gt;add([<span class="string">'key'</span>=&gt;<span class="string">'test'</span>]);</span><br><span class="line">$Model-&gt;table(<span class="string">'test_value'</span>)-&gt;add([<span class="string">'value'</span>=&gt;<span class="string">'test'</span>]);</span><br><span class="line">$Model-&gt;table(<span class="string">'test_task'</span>)-&gt;add([<span class="string">'task'</span>=&gt;<span class="string">'test'</span>]);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span> (操作成功的条件) &#123;</span><br><span class="line">    $Model-&gt;commit(); <span class="comment">// 成功则提交事务</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    $Model-&gt;rollback(); <span class="comment">// 否则将事务回滚</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      <categories>
+          
+          <category> ThinkPHP </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ThinkPHP </tag>
+            
+            <tag> 多表事物 </tag>
+            
+            <tag> 事物 </tag>
+            
+            <tag> M函数 </tag>
             
         </tags>
       
